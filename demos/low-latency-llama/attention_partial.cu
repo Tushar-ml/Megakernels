@@ -337,7 +337,7 @@ template <typename config, typename globals> struct attention_partial {
 
                 // Setup
                 parsed_instruction inst{s};
-                int seq_len = g.pos_id + 1;
+                int seq_len = static_cast<int>(g.pos_id.raw_ptr[0]) + 1;
                 int total_attn_blocks = (seq_len + LLAMA_1B_KV_BLOCK_SIZE - 1) /
                                         LLAMA_1B_KV_BLOCK_SIZE;
                 int blocks_per_partial =
@@ -409,7 +409,7 @@ template <typename config, typename globals> struct attention_partial {
                 // Setup
                 int q_head_local_idx =
                     (q_head_start_idx % q_rt::tile_size_row) / 4;
-                int seq_len = g.pos_id + 1;
+                int seq_len = static_cast<int>(g.pos_id.raw_ptr[0]) + 1;
                 int total_attn_blocks = (seq_len + LLAMA_1B_KV_BLOCK_SIZE - 1) /
                                         LLAMA_1B_KV_BLOCK_SIZE;
                 int blocks_per_partial =

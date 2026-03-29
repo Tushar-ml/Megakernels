@@ -136,7 +136,8 @@ struct globals_t {
     activations_big_indim_t silu_out;
     logits_t logits;
 
-    unsigned int pos_id;
+    using pos_id_t = kittens::gl<int, 1, 1, 1, 1>;
+    pos_id_t pos_id;
     float attn_scale;
     float rms_norm_eps;
     bool skip_attn_reduction;

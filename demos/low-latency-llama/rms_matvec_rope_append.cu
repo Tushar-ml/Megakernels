@@ -137,7 +137,7 @@ template <typename Config, typename Globals> struct rms_qkv_rope_append {
                                   Globals::matvec_block_size;
                     kittens::tma::store_async<cache_policy::EVICT_LAST>(
                         g.k_cache, qkv_proj_smem_bf,
-                        {inst.layer_idx, static_cast<int>(g.pos_id), head_idx,
+                        {inst.layer_idx, static_cast<int>(g.pos_id.raw_ptr[0]), head_idx,
                          dim_idx});
                 } else { // V
                     int base_index =
@@ -147,7 +147,7 @@ template <typename Config, typename Globals> struct rms_qkv_rope_append {
                                   Globals::matvec_block_size;
                     kittens::tma::store_async<cache_policy::EVICT_LAST>(
                         g.v_cache, qkv_proj_smem_bf,
-                        {inst.layer_idx, static_cast<int>(g.pos_id), head_idx,
+                        {inst.layer_idx, static_cast<int>(g.pos_id.raw_ptr[0]), head_idx,
                          dim_idx});
                 }
 
@@ -199,10 +199,10 @@ template <typename Config, typename Globals> struct rms_qkv_rope_append {
                 kittens::tma::expect(sem, rope_cos, rope_sin);
 
                 kittens::tma::load_async<cache_policy::EVICT_LAST>(
-                    rope_cos, g.rope_cos, {0, 0, static_cast<int>(g.pos_id), 0},
+                    rope_cos, g.rope_cos, {0, 0, static_cast<int>(g.pos_id.raw_ptr[0]), 0},
                     sem);
                 kittens::tma::load_async<cache_policy::EVICT_LAST>(
-                    rope_sin, g.rope_sin, {0, 0, static_cast<int>(g.pos_id), 0},
+                    rope_sin, g.rope_sin, {0, 0, static_cast<int>(g.pos_id.raw_ptr[0]), 0},
                     sem);
             }
 
